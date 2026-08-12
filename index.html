@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 PREMIUM CLOUD VPS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, sans-serif;
+        }
+
+        body {
+            background: #0a0a0f;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Animated Background */
+        .bg-glow {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(79, 172, 254, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(247, 151, 30, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(0, 242, 254, 0.04) 0%, transparent 50%);
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            background: rgba(16, 16, 26, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 28px;
+            padding: 48px 44px 44px;
+            max-width: 420px;
+            width: 92%;
+            text-align: center;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #4facfe, #00f2fe, #f7971e);
+            border-radius: 28px 28px 0 0;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 14px;
+            margin-bottom: 28px;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 13px 16px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 2px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #4facfe;
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 0 30px rgba(79, 172, 254, 0.05);
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: #0a0a0f;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 30px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error {
+            color: #f5576c;
+            font-size: 13px;
+            margin-top: 12px;
+            padding: 10px;
+            background: rgba(245, 87, 108, 0.08);
+            border-radius: 8px;
+            border: 1px solid rgba(245, 87, 108, 0.12);
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .status {
+            color: rgba(255, 255, 255, 0.25);
+            font-size: 12px;
+            margin-top: 14px;
+            letter-spacing: 0.3px;
+        }
+
+        .hint {
+            color: rgba(255, 255, 255, 0.12);
+            font-size: 11px;
+            margin-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            padding-top: 16px;
+        }
+
+        .hint strong {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Spinner */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-top: 2px solid #00f2fe;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .container {
+                padding: 32px 24px 28px;
+            }
+            .logo { font-size: 22px; }
+            .form-control { padding: 11px 14px; font-size: 14px; }
+            .btn { padding: 12px; font-size: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+
+<div class="container">
+    <div class="logo">⚡ PREMIUM <span>CLOUD</span> VPS</div>
+    <div class="subtitle">🚀 Login to your VPS Control Panel</div>
+
+    <div class="form-group">
+        <label>👤 Username</label>
+        <input type="text" class="form-control" id="loginUser" placeholder="Enter your VPS username" value="vpsuser1">
+    </div>
+
+    <div class="form-group">
+        <label>🔑 Password</label>
+        <input type="password" class="form-control" id="loginPass" placeholder="Enter your VPS password" value="VpsUser1">
+    </div>
+
+    <div class="error" id="loginError">❌ Invalid credentials</div>
+
+    <button class="btn" id="loginBtn" onclick="login()">🔐 Connect to VPS</button>
+
+    <div class="status" id="status">💡 Enter your VPS credentials to continue</div>
+
+    <div class="hint">
+        🔗 <strong>VPS Host:</strong> <span id="vpsHost">localhost</span>:<span id="vpsPort">8080</span>
+    </div>
+</div>
+
+<script>
+    // ============================================
+    // 🔥 CONFIGURATION - CHANGE THESE!
+    // ============================================
+
+    // OPTION 1: Use localhost (only your phone)
+    const VPS_HOST = 'localhost';
+    const VPS_PORT = '8080';
+
+    // OPTION 2: Use your local IP (same WiFi)
+    // const VPS_HOST = '192.168.8.108';
+    // const VPS_PORT = '8080';
+
+    // OPTION 3: Use your public IP (internet)
+    // const VPS_HOST = '212.70.113.94';
+    // const VPS_PORT = '8080';
+
+    // OPTION 4: Use your domain
+    // const VPS_HOST = 'prem-cloud-vps.duckdns.org';
+    // const VPS_PORT = '8080';
+
+    // ============================================
+    // 🔥 LOGIN ENGINE
+    // ============================================
+
+    // Show host in UI
+    document.getElementById('vpsHost').textContent = VPS_HOST;
+    document.getElementById('vpsPort').textContent = VPS_PORT;
+
+    const loginBtn = document.getElementById('loginBtn');
+    const statusEl = document.getElementById('status');
+    const errorEl = document.getElementById('loginError');
+
+    async function login() {
+        const username = document.getElementById('loginUser').value.trim();
+        const password = document.getElementById('loginPass').value.trim();
+
+        errorEl.classList.remove('show');
+
+        if (!username || !password) {
+            errorEl.textContent = '❌ Please enter username and password';
+            errorEl.classList.add('show');
+            return;
+        }
+
+        // Show loading state
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<span class="spinner"></span> Connecting...';
+        statusEl.textContent = '⏳ Connecting to VPS server...';
+
+        try {
+            const url = `http://${VPS_HOST}:${VPS_PORT}/api/login`;
+
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                statusEl.textContent = '✅ Connected successfully! Loading dashboard...';
+                loginBtn.innerHTML = '✅ Connected!';
+
+                // Store user info
+                localStorage.setItem('vps_user', username);
+                localStorage.setItem('vps_pass', password);
+                localStorage.setItem('vps_host', VPS_HOST);
+                localStorage.setItem('vps_port', VPS_PORT);
+
+                // Redirect to dashboard
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 800);
+
+            } else {
+                errorEl.textContent = '❌ ' + data.message;
+                errorEl.classList.add('show');
+                statusEl.textContent = '❌ Login failed. Please try again.';
+                loginBtn.innerHTML = '🔐 Connect to VPS';
+                loginBtn.disabled = false;
+            }
+
+        } catch (error) {
+            errorEl.textContent = '❌ Server unreachable. Make sure VPS server is running.';
+            errorEl.classList.add('show');
+            statusEl.textContent = '❌ Connection error';
+            loginBtn.innerHTML = '🔐 Connect to VPS';
+            loginBtn.disabled = false;
+        }
+    }
+
+    // Enter key to login
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            login();
+        }
+    });
+
+    // Check if already logged in
+    if (localStorage.getItem('vps_user')) {
+        document.getElementById('loginUser').value = localStorage.getItem('vps_user');
+    }
+
+    console.log(`
+    ╔═══════════════════════════════════════════════════════════════╗
+    ║   🔥 PREMIUM CLOUD VPS - LOGIN PAGE                         ║
+    ║   🚀 Server: http://${VPS_HOST}:${VPS_PORT}                 ║
+    ║   👤 Default: vpsuser1 / VpsUser1                          ║
+    ╚═══════════════════════════════════════════════════════════════╝
+    `);
+</script>
+
+</body>
+</html>
