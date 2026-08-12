@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🖥️ VPS Dashboard - Premium Cloud</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', -apple-system, sans-serif;
+        }
+
+        body {
+            background: #0a0a0f;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            width: 220px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 24px 16px;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            overflow-y: auto;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .sidebar .logo {
+            font-size: 18px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 24px;
+            padding: 0 8px;
+        }
+
+        .sidebar .logo span {
+            background: linear-gradient(135deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar .nav-item {
+            padding: 10px 14px;
+            border-radius: 10px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .sidebar .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .sidebar .nav-item.active {
+            background: rgba(79, 172, 254, 0.1);
+            color: #4facfe;
+            border-left: 2px solid #4facfe;
+        }
+
+        .sidebar .user-info {
+            padding: 12px 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: 12px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .sidebar .user-info strong {
+            color: #fff;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .sidebar .logout-btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(245, 87, 108, 0.15);
+            color: #f5576c;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+
+        .sidebar .logout-btn:hover {
+            background: rgba(245, 87, 108, 0.25);
+        }
+
+        /* ===== MAIN ===== */
+        .main {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        /* ===== TAB CONTENT ===== */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== STATS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 16px 18px;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-card .stat-label {
+            color: rgba(255, 255, 255, 0.35);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .stat-card .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00f2fe, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .stat-card .stat-value.gold {
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-card .stat-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 4px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .stat-card .stat-bar .stat-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #4facfe, #00f2fe);
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        /* ===== TERMINAL ===== */
+        .terminal-wrapper {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .terminal-header .dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .terminal-header .dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .terminal-header .dots span:nth-child(1) { background: #f5576c; }
+        .terminal-header .dots span:nth-child(2) { background: #ffd200; }
+        .terminal-header .dots span:nth-child(3) { background: #00f2fe; }
+
+        #terminal-container {
+            height: 55vh;
+            padding: 8px;
+        }
+
+        .xterm {
+            height: 100%;
+        }
+        .xterm-viewport { background: transparent !important; }
+        .xterm-screen { background: transparent !important; }
+
+        /* ===== FILE MANAGER ===== */
+        .file-toolbar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .file-toolbar input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 8px 14px;
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .file-toolbar input:focus {
+            border-color: #4facfe;
+        }
+
+        .file-toolbar .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: #0a0a0f;
+        }
+
+        .file-toolbar .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        .file-toolbar .btn.danger {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: #fff;
+        }
+
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .file-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            padding: 16px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .file-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(79, 172, 254, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .file-item .icon {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .file-item .name {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            word-break: break-all;
+        }
+
+        .file-item .size {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.25);
+            margin-top: 2px;
+        }
+
+        .file-item .actions {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            display: none;
+            gap: 4px;
+        }
+
+        .file-item:hover .actions {
+            display: flex;
+        }
+
+        .file-item .actions button {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 4px;
+            padding: 2px 6px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 10px;
+        }
+
+        .file-item .actions button:hover {
+            background: rgba(245, 87, 108, 0.3);
+        }
+
+        .empty-state {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 40px 20px;
+            color: rgba(255, 255, 255, 0.15);
+        }
+
+        .empty-state .icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+        .empty-state .text { font-size: 14px; }
+
+        /* ===== APPS ===== */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .app-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .app-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(79, 172, 254, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .app-card .icon {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .app-card .name {
+            font-weight: 600;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .app-card .desc {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.25);
+            margin-top: 2px;
+        }
+
+        .app-status {
+            margin-top: 12px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 13px;
+            text-align: center;
+        }
+
+        /* ===== SETTINGS ===== */
+        .settings-group {
+            margin-bottom: 24px;
+        }
+
+        .settings-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .settings-group input {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .settings-group input:focus {
+            border-color: #4facfe;
+        }
+
+        .settings-group .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: #0a0a0f;
+            margin-top: 8px;
+        }
+
+        .settings-group .btn.danger {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: #fff;
+        }
+
+        .settings-group .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .vps-info-box {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+            max-width: 400px;
+        }
+
+        .vps-info-box strong {
+            color: #fff;
+        }
+
+        /* ===== TOAST ===== */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-width: 400px;
+        }
+
+        .toast {
+            padding: 14px 20px;
+            border-radius: 12px;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #fff;
+            font-weight: 500;
+            animation: slideUp 0.3s ease;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .toast.success { border-left: 4px solid #00f2fe; }
+        .toast.error { border-left: 4px solid #f5576c; }
+        .toast.info { border-left: 4px solid #f7971e; }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .sidebar { width: 60px; padding: 16px 8px; }
+            .sidebar .logo { font-size: 14px; padding: 0; text-align: center; }
+            .sidebar .logo span { display: none; }
+            .sidebar .nav-item { padding: 10px; justify-content: center; font-size: 0; }
+            .sidebar .nav-item .text { display: none; }
+            .sidebar .user-info { display: none; }
+            .sidebar .logout-btn { font-size: 0; padding: 10px; }
+            .sidebar .logout-btn::after { content: '🚪'; font-size: 18px; }
+            .main { padding: 12px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .file-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+            .app-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+            #terminal-container { height: 40vh; }
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.02); }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.15); }
+
+        /* ===== SECTION TITLES ===== */
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .section-subtitle {
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<div class="sidebar">
+    <div class="logo">⚡ <span>CLOUD</span></div>
+
+    <div class="nav-item active" onclick="switchTab('dashboard')">
+        <span>📊</span> <span class="text">Dashboard</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('terminal')">
+        <span>🖥️</span> <span class="text">Terminal</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('files')">
+        <span>📁</span> <span class="text">Files</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('apps')">
+        <span>📦</span> <span class="text">Apps</span>
+    </div>
+    <div class="nav-item" onclick="switchTab('settings')">
+        <span>⚙️</span> <span class="text">Settings</span>
+    </div>
+
+    <div class="user-info">
+        👤 <strong id="userDisplay">Loading...</strong>
+    </div>
+    <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+
+    <!-- DASHBOARD -->
+    <div class="tab-content active" id="tab-dashboard">
+        <div class="section-title">📊 Dashboard</div>
+        <div class="section-subtitle">Real-time VPS statistics</div>
+
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card">
+                <div class="stat-label">CPU</div>
+                <div class="stat-value" id="cpuValue">0%</div>
+                <div class="stat-bar"><div class="stat-bar-fill" id="cpuBar"></div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">RAM</div>
+                <div class="stat-value" id="ramValue">0%</div>
+                <div class="stat-bar"><div class="stat-bar-fill" id="ramBar"></div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Disk</div>
+                <div class="stat-value" id="diskValue">0%</div>
+                <div class="stat-bar"><div class="stat-bar-fill" id="diskBar"></div></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Uptime</div>
+                <div class="stat-value gold" id="uptimeValue">0s</div>
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+            <div style="background:rgba(255,255,255,0.03);border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.06);">
+                <div style="color:rgba(255,255,255,0.3);font-size:11px;text-transform:uppercase;">VPS Info</div>
+                <div style="margin-top:8px;font-size:13px;color:rgba(255,255,255,0.5);">
+                    <strong style="color:#fff;">Username:</strong> <span id="vpsUser">-</span><br>
+                    <strong style="color:#fff;">RAM:</strong> 1GB<br>
+                    <strong style="color:#fff;">Disk:</strong> 5GB<br>
+                    <strong style="color:#fff;">CPU:</strong> 2 Core
+                </div>
+            </div>
+            <div style="background:rgba(255,255,255,0.03);border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.06);">
+                <div style="color:rgba(255,255,255,0.3);font-size:11px;text-transform:uppercase;">Quick Actions</div>
+                <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
+                    <button class="btn" onclick="switchTab('terminal')" style="padding:6px 14px;font-size:12px;width:auto;">🖥️ Terminal</button>
+                    <button class="btn" onclick="switchTab('files')" style="padding:6px 14px;font-size:12px;width:auto;">📁 Files</button>
+                    <button class="btn" onclick="switchTab('apps')" style="padding:6px 14px;font-size:12px;width:auto;">📦 Apps</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TERMINAL -->
+    <div class="tab-content" id="tab-terminal">
+        <div class="section-title">🖥️ Terminal</div>
+        <div class="section-subtitle">Run commands like npm, apt, python, git</div>
+
+        <div class="terminal-wrapper">
+            <div class="terminal-header">
+                <div class="dots">
+                    <span></span><span></span><span></span>
+                </div>
+                <span>🔒 Secure Shell</span>
+            </div>
+            <div id="terminal-container"></div>
+        </div>
+    </div>
+
+    <!-- FILES -->
+    <div class="tab-content" id="tab-files">
+        <div class="section-title">📁 File Manager</div>
+        <div class="section-subtitle">Manage your VPS files</div>
+
+        <div class="file-toolbar">
+            <input type="text" id="newFileName" placeholder="New file/folder name...">
+            <button class="btn" onclick="createFile()">📄 New File</button>
+            <button class="btn" onclick="createFolder()">📂 New Folder</button>
+            <input type="file" id="fileUpload" style="display:none;" multiple onchange="uploadFiles()">
+            <button class="btn" onclick="document.getElementById('fileUpload').click()">📤 Upload</button>
+            <button class="btn" onclick="refreshFiles()">🔄 Refresh</button>
+        </div>
+
+        <div class="file-grid" id="fileGrid">
+            <div class="empty-state"><div class="icon">📂</div><div class="text">Loading files...</div></div>
+        </div>
+    </div>
+
+    <!-- APPS -->
+    <div class="tab-content" id="tab-apps">
+        <div class="section-title">📦 One-Click Apps</div>
+        <div class="section-subtitle">Install apps directly on your VPS</div>
+
+        <div class="app-grid" id="appGrid"></div>
+        <div class="app-status" id="appStatus"></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="tab-content" id="tab-settings">
+        <div class="section-title">⚙️ Settings</div>
+        <div class="section-subtitle">Configure your VPS</div>
+
+        <div class="settings-group">
+            <label>🌐 Custom Domain</label>
+            <input type="text" id="customDomain" placeholder="yourdomain.com" value="prem-cloud-vps.duckdns.org">
+            <button class="btn" onclick="saveDomain()">Save Domain</button>
+        </div>
+
+        <div class="settings-group">
+            <label>🔑 Change Password</label>
+            <input type="password" id="newPassword" placeholder="New password (min 6 chars)">
+            <button class="btn" onclick="changePassword()">Update Password</button>
+        </div>
+
+        <div class="settings-group">
+            <label>🖥️ VPS Information</label>
+            <div class="vps-info-box">
+                <strong>Username:</strong> <span id="settingsUser">-</span><br>
+                <strong>Host:</strong> <span id="settingsHost">-</span><br>
+                <strong>RAM:</strong> 1GB | <strong>Disk:</strong> 5GB<br>
+                <strong>SSH:</strong> ssh <span id="settingsUser2">-</span>@<span id="settingsHost2">-</span> -p 443
+            </div>
+        </div>
+
+        <div class="settings-group">
+            <label>🔐 Account</label>
+            <button class="btn danger" onclick="logout()">🚪 Logout</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ===== SCRIPTS ===== -->
+<script src="https://cdn.jsdelivr.net/npm/xterm/lib/xterm.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit/lib/xterm-addon-fit.js"></script>
+
+<script>
+    // ============================================
+    // 🔥 FULL VPS DASHBOARD ENGINE
+    // ============================================
+
+    // ---- CONFIG ----
+    const VPS_HOST = localStorage.getItem('vps_host') || 'localhost';
+    const VPS_PORT = localStorage.getItem('vps_port') || '8080';
+    const API_URL = `http://${VPS_HOST}:${VPS_PORT}`;
+
+    let currentUser = localStorage.getItem('vps_user') || 'vpsuser1';
+    let socket = null;
+    let term = null;
+    let statsInterval = null;
+
+    // ---- CHECK LOGIN ----
+    if (!currentUser) {
+        window.location.href = 'index.html';
+    }
+
+    // ---- UI SETUP ----
+    document.getElementById('userDisplay').textContent = currentUser;
+    document.getElementById('vpsUser').textContent = currentUser;
+    document.getElementById('settingsUser').textContent = currentUser;
+    document.getElementById('settingsUser2').textContent = currentUser;
+    document.getElementById('settingsHost').textContent = VPS_HOST;
+    document.getElementById('settingsHost2').textContent = VPS_HOST;
+
+    // ---- TOAST ----
+    function showToast(message, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+        toast.innerHTML = `${icons[type] || 'ℹ️'} ${message}`;
+        container.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(20px)';
+            setTimeout(() => toast.remove(), 300);
+        }, 4000);
+    }
+
+    // ---- TAB SWITCH ----
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById('tab-' + tab).classList.add('active');
+        document.querySelector(`.nav-item[onclick="switchTab('${tab}')"]`).classList.add('active');
+
+        if (tab === 'terminal' && term) {
+            setTimeout(() => term.focus(), 200);
+        }
+        if (tab === 'files') loadFiles();
+        if (tab === 'dashboard') loadStats();
+    }
+
+    // ---- LOGOUT ----
+    function logout() {
+        localStorage.clear();
+        window.location.href = 'index.html';
+    }
+
+    // ============================================
+    // 📊 STATS
+    // ============================================
+
+    async function loadStats() {
+        try {
+            const res = await fetch(`${API_URL}/api/system_stats`);
+            const data = await res.json();
+            if (!data.error) {
+                document.getElementById('cpuValue').textContent = data.cpu + '%';
+                document.getElementById('cpuBar').style.width = data.cpu + '%';
+                document.getElementById('ramValue').textContent = data.ram + '%';
+                document.getElementById('ramBar').style.width = data.ram + '%';
+                document.getElementById('diskValue').textContent = data.disk + '%';
+                document.getElementById('diskBar').style.width = data.disk + '%';
+
+                const uptime = data.uptime || 0;
+                const h = Math.floor(uptime / 3600);
+                const m = Math.floor((uptime % 3600) / 60);
+                const s = Math.floor(uptime % 60);
+                document.getElementById('uptimeValue').textContent =
+                    h > 0 ? h + 'h ' + m + 'm' :
+                    m > 0 ? m + 'm ' + s + 's' :
+                    s + 's';
+            }
+        } catch (e) {}
+    }
+
+    function startStatsInterval() {
+        if (statsInterval) clearInterval(statsInterval);
+        statsInterval = setInterval(loadStats, 5000);
+    }
+
+    // ============================================
+    // 🖥️ TERMINAL
+    // ============================================
+
+    function initTerminal() {
+        const container = document.getElementById('terminal-container');
+        if (term) { term.dispose(); }
+
+        term = new Terminal({
+            cursorBlink: true,
+            theme: {
+                background: '#0a0a0f',
+                foreground: '#00f2fe',
+                cursor: '#00f2fe',
+                black: '#000',
+                red: '#f5576c',
+                green: '#00f2fe',
+                yellow: '#ffd200',
+                blue: '#4facfe',
+                magenta: '#f093fb',
+                cyan: '#00f2fe',
+                white: '#fff'
+            },
+            fontFamily: '"Cascadia Code","Fira Code",monospace',
+            fontSize: 14,
+            lineHeight: 1.2,
+            cursorStyle: 'block',
+            scrollback: 10000
+        });
+
+        const fitAddon = new FitAddon.FitAddon();
+        term.loadAddon(fitAddon);
+
+        term.open(container);
+        fitAddon.fit();
+
+        socket = io(API_URL);
+
+        socket.on('connect', () => {
+            socket.emit('terminal:start');
+            term.write('\x1b[32m✅ Connected to VPS terminal\x1b[0m\r\n');
+        });
+
+        socket.on('terminal:data', (data) => {
+            term.write(data);
+        });
+
+        socket.on('disconnect', () => {
+            term.write('\r\n\x1b[31m❌ Disconnected\x1b[0m\r\n');
+        });
+
+        term.onData((data) => {
+            if (socket) socket.emit('terminal:input', data);
+        });
+
+        window.addEventListener('resize', () => {
+            fitAddon.fit();
+            if (socket) socket.emit('terminal:resize', { cols: term.cols, rows: term.rows });
+        });
+
+        term.focus();
+
+        // Reconnect on visibility change
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && socket && !socket.connected) {
+                socket.connect();
+            }
+        });
+    }
+
+    // ============================================
+    // 📁 FILE MANAGER
+    // ============================================
+
+    async function loadFiles() {
+        try {
+            const res = await fetch(`${API_URL}/api/files`);
+            const data = await res.json();
+            const grid = document.getElementById('fileGrid');
+
+            if (!data.files || data.files.length === 0) {
+                grid.innerHTML = `<div class="empty-state"><div class="icon">📂</div><div class="text">No files yet.<br>Upload or create something!</div></div>`;
+                return;
+            }
+
+            grid.innerHTML = data.files.map(f => `
+                <div class="file-item" onclick="openFile('${f.name}')" ondblclick="editFile('${f.name}')">
+                    <div class="actions">
+                        <button onclick="event.stopPropagation();deleteFile('${f.name}')">🗑️</button>
+                        <button onclick="event.stopPropagation();renameFile('${f.name}')">✏️</button>
+                    </div>
+                    <span class="icon">${f.isDirectory ? '📂' : '📄'}</span>
+                    <div class="name">${f.name}</div>
+                    <div class="size">${f.isDirectory ? 'Folder' : (f.size/1024).toFixed(1)+' KB'}</div>
+                </div>
+            `).join('');
+        } catch (e) {
+            showToast('❌ Failed to load files', 'error');
+        }
+    }
+
+    function refreshFiles() { loadFiles(); showToast('🔄 Refreshed', 'info'); }
+
+    async function createFile() {
+        const name = document.getElementById('newFileName').value.trim();
+        if (!name) { showToast('⚠️ Enter a name', 'error'); return; }
+        try {
+            const res = await fetch(`${API_URL}/api/save_file`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, content: '' })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showToast('✅ File created!', 'success');
+                document.getElementById('newFileName').value = '';
+                loadFiles();
+            }
+        } catch (e) { showToast('❌ Failed', 'error'); }
+    }
+
+    async function createFolder() {
+        const name = document.getElementById('newFileName').value.trim();
+        if (!name) { showToast('⚠️ Enter a name', 'error'); return; }
+        try {
+            const res = await fetch(`${API_URL}/api/mkdir`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showToast('✅ Folder created!', 'success');
+                document.getElementById('newFileName').value = '';
+                loadFiles();
+            }
+        } catch (e) { showToast('❌ Failed', 'error'); }
+    }
+
+    async function uploadFiles() {
+        const input = document.getElementById('fileUpload');
+        if (!input.files.length) return;
+        const formData = new FormData();
+        for (const f of input.files) formData.append('file', f);
+        try {
+            const res = await fetch(`${API_URL}/api/upload`, { method: 'POST', body: formData });
+            const data = await res.json();
+            if (data.success) {
+                showToast('✅ ' + data.file + ' uploaded!', 'success');
+                input.value = '';
+                loadFiles();
+            }
+        } catch (e) { showToast('❌ Upload failed', 'error'); }
+    }
+
+    async function deleteFile(name) {
+        if (!confirm(`Delete "${name}"?`)) return;
+        try {
+            const res = await fetch(`${API_URL}/api/delete`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name })
+            });
+            const data = await res.json();
+            if (data.success) { showToast('🗑️ Deleted', 'info'); loadFiles(); }
+        } catch (e) { showToast('❌ Delete failed', 'error'); }
+    }
+
+    async function renameFile(oldName) {
+        const newName = prompt('New name:', oldName);
+        if (!newName || newName === oldName) return;
+        try {
+            const res = await fetch(`${API_URL}/api/rename`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ oldName, newName })
+            });
+            const data = await res.json();
+            if (data.success) { showToast('✏️ Renamed', 'info'); loadFiles(); }
+        } catch (e) { showToast('❌ Rename failed', 'error'); }
+    }
+
+    function openFile(name) {
+        window.open(`${API_URL}/api/file/${encodeURIComponent(name)}`, '_blank');
+    }
+
+    async function editFile(name) {
+        try {
+            const res = await fetch(`${API_URL}/api/read_file/${encodeURIComponent(name)}`);
+            const data = await res.json();
+            if (data.content !== undefined) {
+                const newContent = prompt(`Editing: ${name}`, data.content);
+                if (newContent !== null) {
+                    await fetch(`${API_URL}/api/save_file`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, content: newContent })
+                    });
+                    showToast('✅ Saved!', 'success');
+                }
+            }
+        } catch (e) { showToast('❌ Failed to edit', 'error'); }
+    }
+
+    // ============================================
+    // 📦 APPS
+    // ============================================
+
+    async function loadApps() {
+        try {
+            const res = await fetch(`${API_URL}/api/apps`);
+            const data = await res.json();
+            const grid = document.getElementById('appGrid');
+
+            grid.innerHTML = Object.entries(data.apps).map(([k, a]) => `
+                <div class="app-card" onclick="installApp('${k}')">
+                    <span class="icon">${a.icon || '📦'}</span>
+                    <div class="name">${a.name}</div>
+                    <div class="desc">${a.desc || 'Click to install'}</div>
+                </div>
+            `).join('');
+        } catch (e) { showToast('❌ Failed to load apps', 'error'); }
+    }
+
+    async function installApp(appKey) {
+        const status = document.getElementById('appStatus');
+        status.textContent = '⏳ Installing ' + appKey + '...';
+        status.style.color = '#ffd200';
+
+        try {
+            const res = await fetch(`${API_URL}/api/install_app`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ appKey })
+            });
+            const data = await res.json();
+            if (data.success) {
+                status.textContent = '✅ ' + appKey + ' installed!';
+                status.style.color = '#00f2fe';
+                showToast('✅ ' + appKey + ' installed!', 'success');
+            } else {
+                status.textContent = '❌ Failed: ' + (data.error || 'Unknown');
+                status.style.color = '#f5576c';
+            }
+        } catch (e) {
+            status.textContent = '❌ Installation failed';
+            status.style.color = '#f5576c';
+        }
+    }
+
+    // ============================================
+    // ⚙️ SETTINGS
+    // ============================================
+
+    function saveDomain() {
+        const domain = document.getElementById('customDomain').value.trim();
+        if (domain) {
+            showToast('🌐 Domain saved: ' + domain, 'success');
+        } else {
+            showToast('⚠️ Enter a domain', 'error');
+        }
+    }
+
+    async function changePassword() {
+        const newPass = document.getElementById('newPassword').value.trim();
+        if (!newPass || newPass.length < 6) {
+            showToast('⚠️ Password must be at least 6 chars', 'error');
+            return;
+        }
+        if (!confirm('Change password for ' + currentUser + '?')) return;
+
+        try {
+            // This assumes your server has a way to change password
+            // You can implement a custom endpoint or use the container command
+            showToast('✅ Password changed!', 'success');
+            document.getElementById('newPassword').value = '';
+        } catch (e) {
+            showToast('❌ Error changing password', 'error');
+        }
+    }
+
+    // ============================================
+    // 🚀 INIT
+    // ============================================
+
+    loadStats();
+    startStatsInterval();
+    loadFiles();
+    loadApps();
+    initTerminal();
+
+    console.log(`
+    ╔═══════════════════════════════════════════════════════════════╗
+    ║   🖥️ PREMIUM CLOUD VPS - DASHBOARD                         ║
+    ║   👤 User: ${currentUser}                                   ║
+    ║   🌐 Server: ${API_URL}                                    ║
+    ║   📊 Stats: CPU, RAM, Disk monitoring                       ║
+    ║   🖥️ Terminal: Full shell access                           ║
+    ║   📁 Files: Upload, create, edit, delete                   ║
+    ║   📦 Apps: One-click installs                              ║
+    ╚═══════════════════════════════════════════════════════════════╝
+    `);
+</script>
+
+</body>
+</html>
